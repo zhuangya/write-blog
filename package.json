@@ -1,0 +1,34 @@
+{
+  "name": "write-blog",
+  "version": "0.0.1",
+  "description": "command line helper for writing jekyll blog",
+  "main": "./bin/write-blog.js",
+  "bin": {
+    "blog": "./bin/write-blog.js"
+  },
+  "scripts": {
+    "test": "ava"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/zhuangya/write-blog.git"
+  },
+  "keywords": [
+    "jekyll",
+    "blog"
+  ],
+  "author": "Ya Zhuang <zhuangya@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zhuangya/write-blog/issues"
+  },
+  "homepage": "https://github.com/zhuangya/write-blog#readme",
+  "dependencies": {
+    "mkdirp": "^0.5.1",
+    "moment": "^2.12.0",
+    "read-dir": "^0.2.0"
+  },
+  "devDependencies": {
+    "ava": "^0.13.0"
+  }
+}
