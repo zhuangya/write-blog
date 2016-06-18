@@ -1,6 +1,6 @@
 {
   "name": "write-blog",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "command line helper for writing jekyll blog",
   "main": "./bin/write-blog.js",
   "bin": {

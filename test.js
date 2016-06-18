@@ -12,5 +12,10 @@ test('generateFilename', t => {
 });
 
 test('writeSkeleton', t => {
-  t.is(lib.writeSkeleton('haha'), '---\nlayout: post\ntitle: haha\n---\n\n');
+  const publishTime = '2011-07-27 11:22:33 +0100';
+  const blogEntryArray = lib.writeSkeleton('haha',publishTime).split('\n');
+  const dateFiled = blogEntryArray.splice(4, 1)[0];
+
+  t.is(blogEntryArray.join(''), '---layout: posttitle: hahacategories: __CHANGE_ME__---');
+  t.ok(moment(dateFiled.split(': ')[1]).isSame(publishTime));
 });
