@@ -1,6 +1,6 @@
 {
   "name": "write-blog",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "command line helper for writing jekyll blog",
   "main": "./bin/write-blog.js",
   "bin": {
@@ -17,6 +17,7 @@
     "jekyll",
     "blog"
   ],
+  "engine": ">=6",
   "author": "Ya Zhuang <zhuangya@gmail.com>",
   "license": "MIT",
   "bugs": {
@@ -29,6 +30,6 @@
     "read-dir": "^0.2.0"
   },
   "devDependencies": {
-    "ava": "^0.13.0"
+    "ava": "^0.15.2"
   }
 }
