@@ -17,5 +17,5 @@ test('writeSkeleton', t => {
   const dateFiled = blogEntryArray.splice(4, 1)[0];
 
   t.is(blogEntryArray.join(''), '---layout: posttitle: hahacategories: __CHANGE_ME__---');
-  t.ok(moment(dateFiled.split(': ')[1]).isSame(publishTime));
+  t.truthy(moment(dateFiled.split(': ')[1]).isSame(publishTime));
 });
