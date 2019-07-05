@@ -30,6 +30,6 @@
     "read-dir": "^0.2.0"
   },
   "devDependencies": {
-    "ava": "^0.15.2"
+    "ava": "^2.1.0"
   }
 }
