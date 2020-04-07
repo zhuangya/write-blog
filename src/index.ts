@@ -5,53 +5,13 @@ import {Command, flags} from '@oclif/command'
 import {safeDump} from 'js-yaml';
 import slugify from 'slugify';
 import { prompt } from 'inquirer';
-import * as chalk from 'chalk';
+import * as makedir from 'make-dir';
 
-interface Answer {
-  date?: string;
-  tags?: string;
-  slug: string;
-  title: string;
-}
-
-interface Conf {
-  dir: string;
-  ext: string;
-}
-
-const required = (input:string): boolean => input.length > 0;
-
-const getBlogPathByConf = (conf: Conf) => (slug: string):string => {
-  const { ext, dir } = conf;
-  const filename = `${slug}.${ext}`;
-
-  return join(dir, filename);
-}
+import type { Conf, Answer, BlogPath } from '../type';
+import { oops, required, getBlogPathByConf, getBlogQuestions } from './lib';
 
 const promptQuestions = async (prefilledAnswers: Answer): Promise<Answer> => {
-  const questions = [{
-    name: 'title',
-    type: 'input',
-    message: 'Blog Title',
-    validate: required,
-  }, {
-    name: 'slug',
-    type: 'input',
-    message: 'slug',
-    validate: required,
-    default: slugify(prefilledAnswers.title || ''),
-  }, {
-    name: 'tags',
-    type: 'input',
-    message: 'tags, separate by comma',
-  }, {
-    name: 'date',
-    type: 'input',
-    message: 'date',
-    default: new Date().toISOString(),
-  }].filter(({ name }) => Boolean(!prefilledAnswers[name as keyof Answer]));
-
-  const promptAnswers = await prompt(questions);
+  const promptAnswers = await prompt(getBlogQuestions(prefilledAnswers));
 
   return {
     ...prefilledAnswers,
@@ -73,9 +33,7 @@ const writeConfGuide = async ():Promise<Conf> => {
     default: 'mdx',
   }];
 
-
   const conf = await prompt(questions) as Conf;
-
   await fs.writeFile(join(process.cwd(), '.write-blog.json'), JSON.stringify(conf));
 
   return conf;
@@ -84,9 +42,9 @@ const writeConfGuide = async ():Promise<Conf> => {
 const fetchConf = async (): Promise<Conf> => {
   try {
     const confPath = join(process.cwd(), '.write-blog.json');
-    const conf = await fs.readFile(confPath, 'utf-8');
+    const conf = await fs.readFile(confPath, { encoding: 'utf8' });
 
-    return JSON.parse(conf as string);
+    return JSON.parse(conf.toString());
   } catch (e) {
     throw new Error('conf not exist or broken');
   }
@@ -112,9 +70,9 @@ class ZhuangyaWriteBlog extends Command {
     let conf = {} as Conf;
 
     try {
-      let conf = await fetchConf();
+      conf = await fetchConf();
     } catch (e) {
-      console.log(chalk.red('Conf file not exist'));
+      oops('Conf file not exist');
       conf = await writeConfGuide();
     }
 
@@ -122,16 +80,24 @@ class ZhuangyaWriteBlog extends Command {
 
     const prefilledAnswers:Answer = {
       date: flags.date,
-      slug: flags.slug || '',
+      slug: slugify(flags.slug || ''),
       tags: flags.tags || '',
       title: args.title,
     };
 
-    const { title, ...frontmatter } = await promptQuestions(prefilledAnswers);
+    const frontmatter = await promptQuestions(prefilledAnswers);
 
-    this.log(`blog path: ${getBlogPath(frontmatter.slug)}`);
+    const { title, slug } = frontmatter;
 
-    this.log(title, frontmatter);
+    const { dir, base } = getBlogPath(slug);
+
+    await makedir(dir);
+
+    const content = ['---', safeDump(frontmatter), '---', ''].join('\n');
+
+    await fs.writeFile(join(dir, base), content, { encoding: 'utf8', flag: 'wx' });
+
+    this.log(join(dir, base));
   }
 }
 
