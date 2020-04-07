@@ -79,7 +79,7 @@ class ZhuangyaWriteBlog extends Command {
     const getBlogPath = getBlogPathByConf(conf);
 
     const prefilledAnswers:Answer = {
-      date: flags.date,
+      date: flags.date || new Date().toISOString(),
       slug: slugify(flags.slug || ''),
       tags: flags.tags || '',
       title: args.title,
@@ -87,9 +87,9 @@ class ZhuangyaWriteBlog extends Command {
 
     const frontmatter = await promptQuestions(prefilledAnswers);
 
-    const { title, slug } = frontmatter;
+    const { title, slug, date } = frontmatter;
 
-    const { dir, base } = getBlogPath(slug);
+    const { dir, base } = getBlogPath(slug, date);
 
     await makedir(dir);
 
