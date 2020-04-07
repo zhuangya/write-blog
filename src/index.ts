@@ -15,11 +15,18 @@ interface Answer {
 }
 
 interface Conf {
-  markdownExtension: string;
-  srcDirectory: string;
+  dir: string;
+  ext: string;
 }
 
 const required = (input:string): boolean => input.length > 0;
+
+const getBlogPathByConf = (conf: Conf) => (slug: string):string => {
+  const { ext, dir } = conf;
+  const filename = `${slug}.${ext}`;
+
+  return join(dir, filename);
+}
 
 const promptQuestions = async (prefilledAnswers: Answer): Promise<Answer> => {
   const questions = [{
@@ -102,14 +109,16 @@ class ZhuangyaWriteBlog extends Command {
   async run() {
     const {args, flags} = this.parse(ZhuangyaWriteBlog)
 
+    let conf = {} as Conf;
+
     try {
-      const { } = await fetchConf();
+      let conf = await fetchConf();
     } catch (e) {
-
       console.log(chalk.red('Conf file not exist'));
-
-      await writeConfGuide();
+      conf = await writeConfGuide();
     }
+
+    const getBlogPath = getBlogPathByConf(conf);
 
     const prefilledAnswers:Answer = {
       date: flags.date,
@@ -119,6 +128,8 @@ class ZhuangyaWriteBlog extends Command {
     };
 
     const { title, ...frontmatter } = await promptQuestions(prefilledAnswers);
+
+    this.log(`blog path: ${getBlogPath(frontmatter.slug)}`);
 
     this.log(title, frontmatter);
   }
