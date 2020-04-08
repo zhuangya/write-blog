@@ -2,17 +2,18 @@ import type { Conf, Answer, BlogPath } from '../type';
 import { join } from 'path';
 import slugify from 'slugify';
 import * as chalk from 'chalk';
+import { format } from 'date-fns';
 
 export const required = (input:string): boolean => input.length > 0;
 
 export const getBlogPathByConf = (conf: Conf) => (slug: string, date: string):BlogPath => {
-  const { ext, dir } = conf;
+  const { ext, dir, timeFormatString='yyyy/MM' } = conf;
   const base = `${slug}.${ext}`;
 
   const time = new Date(date);
 
   return {
-    dir: join(dir, String(time.getFullYear()), String(time.getMonth() + 1).padStart(2, '0')),
+    dir: join(dir, format(time, timeFormatString)),
     base
   }
 };

@@ -8,6 +8,7 @@ export interface Answer {
 export interface Conf {
   dir: string;
   ext: string;
+  timeFormatString: string;
 }
 
 export interface BlogPath {
