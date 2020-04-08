@@ -1,7 +1,7 @@
 {
-  "name": "@zhuangya/write-blog",
+  "name": "write-blog",
   "description": "it's time to write blog",
-  "version": "0.0.1",
+  "version": "0.2.0",
   "author": "Ya Zhuang",
   "bin": {
     "write-blog": "./bin/run"
