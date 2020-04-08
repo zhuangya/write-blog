@@ -11,15 +11,15 @@ import * as open from 'open-editor';
 export const guide = async (prefill: Answer):Promise<string> => {
   const conf = await ensureConf();
 
-  const title = prefill.title || await cli.prompt('Blog Title *:');
-  const slug = prefill.slug || await cli.prompt('Blog Slug *:', { default: slugify(title).toLowerCase() });
-  const tags = prefill.tags || await cli.prompt('Tags (Optional, separate by comma<,>):');
-  const date = prefill.date || await cli.prompt('Date:', { default: new Date().toISOString() });
+  const title = prefill.title || await cli.prompt('Blog Title *');
+  const slug = prefill.slug || await cli.prompt('Blog Slug *', { default: slugify(title).toLowerCase() });
+  const tags = prefill.tags || await cli.prompt('Tags (Optional, separate by comma<,>)', { required: false });
+  const date = prefill.date || await cli.prompt('Date', { default: new Date().toISOString() });
 
   const answer = {
     title,
     slug,
-    tags,
+    tags: tags.split(/,|，/),
     date
   }
 
