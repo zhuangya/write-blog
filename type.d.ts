@@ -10,8 +10,3 @@ export interface Conf {
   ext: string;
   timeFormatString: string;
 }
-
-export interface BlogPath {
-  dir: string;
-  base: string;
-}
