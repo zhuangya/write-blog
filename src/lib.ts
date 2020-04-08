@@ -3,6 +3,8 @@ import { join } from 'path';
 import slugify from 'slugify';
 import * as chalk from 'chalk';
 import { format } from 'date-fns';
+import { promises as fs, copyFile } from 'fs';
+import { prompt } from 'inquirer';
 
 export const required = (input:string): boolean => input.length > 0;
 
@@ -48,4 +50,44 @@ export const getBlogQuestions = (prefilledAnswers: Answer) => {
     default: new Date().toISOString(),
     when: !Boolean(prefilledAnswers.date),
   }];
+};
+
+export const promptQuestions = async (prefilledAnswers: Answer): Promise<Answer> => {
+  const promptAnswers = await prompt(getBlogQuestions(prefilledAnswers));
+
+  return {
+    ...prefilledAnswers,
+    ...promptAnswers,
+  };
+};
+
+export const writeConfGuide = async ():Promise<Conf> => {
+  const questions = [{
+    name: 'dir',
+    type: 'input',
+    message: '[conf] blog src directory',
+    validate: required,
+  }, {
+    name: 'ext',
+    type: 'input',
+    message: '[conf] markdown file extension',
+    validate: required,
+    default: 'mdx',
+  }];
+
+  const conf = await prompt(questions) as Conf;
+  await fs.writeFile(join(process.cwd(), '.write-blog.json'), JSON.stringify(conf));
+
+  return conf;
+}
+
+export const fetchConf = async (): Promise<Conf> => {
+  try {
+    const confPath = join(process.cwd(), '.write-blog.json');
+    const conf = await fs.readFile(confPath, { encoding: 'utf8' });
+
+    return JSON.parse(conf.toString());
+  } catch (e) {
+    throw new Error('conf not exist or broken');
+  }
 };

@@ -8,47 +8,7 @@ import { prompt } from 'inquirer';
 import * as makedir from 'make-dir';
 
 import type { Conf, Answer, BlogPath } from '../type';
-import { oops, required, getBlogPathByConf, getBlogQuestions } from './lib';
-
-const promptQuestions = async (prefilledAnswers: Answer): Promise<Answer> => {
-  const promptAnswers = await prompt(getBlogQuestions(prefilledAnswers));
-
-  return {
-    ...prefilledAnswers,
-    ...promptAnswers,
-  };
-};
-
-const writeConfGuide = async ():Promise<Conf> => {
-  const questions = [{
-    name: 'dir',
-    type: 'input',
-    message: '[conf] blog src directory',
-    validate: required,
-  }, {
-    name: 'ext',
-    type: 'input',
-    message: '[conf] markdown file extension',
-    validate: required,
-    default: 'mdx',
-  }];
-
-  const conf = await prompt(questions) as Conf;
-  await fs.writeFile(join(process.cwd(), '.write-blog.json'), JSON.stringify(conf));
-
-  return conf;
-}
-
-const fetchConf = async (): Promise<Conf> => {
-  try {
-    const confPath = join(process.cwd(), '.write-blog.json');
-    const conf = await fs.readFile(confPath, { encoding: 'utf8' });
-
-    return JSON.parse(conf.toString());
-  } catch (e) {
-    throw new Error('conf not exist or broken');
-  }
-};
+import { oops, required, getBlogPathByConf, getBlogQuestions, promptQuestions, writeConfGuide, fetchConf } from './lib';
 
 class ZhuangyaWriteBlog extends Command {
   static description = 'it\'s time to write blog';
