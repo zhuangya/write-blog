@@ -1,10 +1,14 @@
 import type { Conf, Answer, BlogPath } from '../type';
 import { join } from 'path';
 import slugify from 'slugify';
+import {safeDump} from 'js-yaml';
 import * as chalk from 'chalk';
+import * as makedir from 'make-dir';
 import { format } from 'date-fns';
+import * as lcp from 'line-column-path';
 import { promises as fs, copyFile } from 'fs';
 import { prompt } from 'inquirer';
+import type { PathLike } from 'line-column-path';
 
 export const required = (input:string): boolean => input.length > 0;
 
@@ -91,3 +95,17 @@ export const fetchConf = async (): Promise<Conf> => {
     throw new Error('conf not exist or broken');
   }
 };
+
+export const writeContent = async (frontmatter: Answer, dir: string, base: string) => {
+  const file = join(dir, base);
+
+  await makedir(dir);
+  const content = ['---', safeDump(frontmatter), '---', ''].join('\n');
+  await fs.writeFile(join(dir, base), content, { encoding: 'utf8', flag: 'wx' });
+
+  return lcp.stringify({
+    file,
+    line: content.split('\n').length + 1,
+    column: 0
+  });
+}
