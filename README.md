@@ -21,7 +21,7 @@ $ npm install -g write-blog
 $ write-blog COMMAND
 running command...
 $ write-blog (-v|--version|version)
-write-blog/0.3.2 darwin-x64 node-v15.5.0
+write-blog/0.4.0 darwin-x64 node-v15.5.0
 $ write-blog --help [COMMAND]
 USAGE
   $ write-blog COMMAND
