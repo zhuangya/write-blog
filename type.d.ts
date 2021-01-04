@@ -1,7 +1,7 @@
 export interface Answer {
-  date: string
+  date?: string
   tags?: string
-  slug: string
+  slug?: string
   title: string
 }
 

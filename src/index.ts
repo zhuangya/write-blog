@@ -1,5 +1,4 @@
 import { Command, flags } from '@oclif/command'
-import slugify from 'slugify'
 
 import { guide } from './guide'
 
@@ -23,9 +22,9 @@ class ZhuangyaWriteBlog extends Command {
     const { args, flags } = this.parse(ZhuangyaWriteBlog)
 
     const prefill: Answer = {
-      date: flags.date ?? new Date().toISOString(),
-      slug: slugify(flags.slug ?? '').toLowerCase(),
-      tags: flags.tags ?? '',
+      date: flags.date,
+      slug: flags.slug,
+      tags: flags.tags,
       title: args.title
     }
 

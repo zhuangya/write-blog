@@ -5,11 +5,12 @@ import { cli, IPromptOptions } from 'cli-ux'
 import { promises as fs } from 'fs'
 import slugify from 'slugify'
 import { format } from 'date-fns'
+import { stringify } from 'gray-matter';
 import * as mkdir from 'make-dir'
-import { safeDump } from 'js-yaml'
 import * as open from 'open-editor'
 
 async function promptWithPrefill<T=string> (prefill: T | undefined, question: string, options?: IPromptOptions): Promise<T> {
+  console.log('>>', prefill, question);
   if (typeof prefill === 'undefined') {
     return await cli.prompt(question, options)
   }
@@ -53,12 +54,7 @@ const writeBlogFile = async (conf: Conf, answer: ParsedAnswer): Promise<PathDesc
 
   const blogFilePath = join(blogDir, `${answer.slug}.${conf.ext}`)
 
-  const content = [
-    '---',
-    safeDump(answer),
-    '---',
-    ''
-  ].join('\n')
+  const content = stringify('', answer)
 
   await fs.writeFile(blogFilePath, content, { encoding: 'utf8', flag: 'wx' })
 
