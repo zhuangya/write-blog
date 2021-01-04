@@ -47,7 +47,7 @@ const ensureConf = async (): Promise<Conf> => {
     .catch(async () => await createConfGuide(confPath))
 }
 
-const writeBlogFile = async (conf: Conf, answer: ParsedAnswer): PathDescriptor => {
+const writeBlogFile = async (conf: Conf, answer: ParsedAnswer): Promise<PathDescriptor> => {
   const blogDir = join(conf.dir, format(new Date(answer.date), conf.timeFormatString))
   await mkdir(blogDir)
 
