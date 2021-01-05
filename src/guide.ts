@@ -10,7 +10,6 @@ import * as mkdir from 'make-dir'
 import * as open from 'open-editor'
 
 async function promptWithPrefill<T=string> (prefill: T | undefined, question: string, options?: IPromptOptions): Promise<T> {
-  console.log('>>', prefill, question);
   if (typeof prefill === 'undefined') {
     return await cli.prompt(question, options)
   }
@@ -18,7 +17,7 @@ async function promptWithPrefill<T=string> (prefill: T | undefined, question: st
   return prefill
 }
 
-export const guide = async (prefill: Answer): Promise<string> => {
+export const guide = async (prefill: Answer): Promise<void> => {
   const conf = await ensureConf()
 
   const title = await promptWithPrefill(prefill.title, 'Blog Title *')
@@ -36,8 +35,6 @@ export const guide = async (prefill: Answer): Promise<string> => {
   const blogFile = await writeBlogFile(conf, answer)
 
   open([blogFile])
-
-  return blogFile.file
 }
 
 const ensureConf = async (): Promise<Conf> => {
