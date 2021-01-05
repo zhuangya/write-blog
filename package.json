@@ -12,7 +12,7 @@
     "@oclif/config": "^1",
     "@oclif/plugin-help": "^2",
     "cli-ux": "^5.4.5",
-    "date-fns": "^2.11.1",
+    "date-fns": "^2.16.1",
     "gray-matter": "^4.0.2",
     "make-dir": "^3.0.2",
     "open-editor": "^2.0.1",
